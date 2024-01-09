@@ -1,7 +1,7 @@
 apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
-  name: openshift-pipelines-git
+  name: build-and-push-python
 spec:
   params:
     - default: openshift-pipelines-git
