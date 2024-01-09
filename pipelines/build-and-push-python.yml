@@ -13,8 +13,7 @@ spec:
     - default: ''
       name: GIT_REVISION
       type: string
-    - default: >-
-        image-registry.openshift-image-registry.svc:5000/qotd-pipeline/openshift-pipelines-git
+    - default: ''
       name: IMAGE_NAME
       type: string
     - default: .
