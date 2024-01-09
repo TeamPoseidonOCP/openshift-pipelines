@@ -13,7 +13,7 @@ spec:
     - default: ''
       name: GIT_REVISION
       type: string
-    - default: ''
+    - default: 'sourcetoimage.azurecr.io/test-image/test-image:v1'
       name: IMAGE_NAME
       type: string
     - default: .
