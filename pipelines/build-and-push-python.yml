@@ -56,19 +56,8 @@ spec:
       workspaces:
         - name: source
           workspace: workspace
-    - name: build-push
-      runAfter:
-        - build
-      taskRef:
-        name: kaniko
-      workspaces:
-      - name: source
-        workspace: workspace
-      - name: dockerconfig
-        workspace: docker-credentials
-      params:
-      - name: IMAGE
-        value: $(params.IMAGE_NAME)
+        - name: dockerconfig
+          workspace: docker-credentials
   workspaces:
     - name: workspace
     - name: docker-credentials
