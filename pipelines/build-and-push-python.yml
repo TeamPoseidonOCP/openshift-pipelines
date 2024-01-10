@@ -21,6 +21,10 @@ spec:
     - default: 3.9-ubi8
       name: VERSION
       type: string
+    - name: ACR_USERNAME
+      description: The username for the ACR
+    - name: ACR_PASSWORD
+      description: The password for the ACR
   tasks:
     - name: fetch-repository
       params:
@@ -53,6 +57,21 @@ spec:
       taskRef:
         kind: ClusterTask
         name: s2i-python
+      workspaces:
+        - name: source
+          workspace: workspace
+    - name: push-image
+      taskRef:
+        name: push-to-acr-task
+      params:
+        - name: IMAGE
+          value: $(params.IMAGE_NAME)
+        - name: ACR_USERNAME
+          value: $(params.ACR_USERNAME)
+        - name: ACR_PASSWORD
+          value: $(params.ACR_PASSWORD)
+      runAfter:
+        - build-image
       workspaces:
         - name: source
           workspace: workspace
