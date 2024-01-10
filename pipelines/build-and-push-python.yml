@@ -38,6 +38,8 @@ spec:
       workspaces:
         - name: output
           workspace: workspace
+        - name: repoconfig
+          workspace: repo-credentials
     - name: build
       params:
         - name: IMAGE
@@ -61,3 +63,4 @@ spec:
   workspaces:
     - name: workspace
     - name: docker-credentials
+    - name: repo-credentials
