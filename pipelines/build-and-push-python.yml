@@ -60,20 +60,5 @@ spec:
       workspaces:
         - name: source
           workspace: workspace
-    - name: push-image
-      taskRef:
-        name: push-to-acr-task
-      params:
-        - name: IMAGE
-          value: $(params.IMAGE_NAME)
-        - name: ACR_USERNAME
-          value: $(params.ACR_USERNAME)
-        - name: ACR_PASSWORD
-          value: $(params.ACR_PASSWORD)
-      runAfter:
-        - build-image
-      workspaces:
-        - name: source
-          workspace: workspace
   workspaces:
     - name: workspace
