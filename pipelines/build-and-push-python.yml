@@ -21,10 +21,6 @@ spec:
     - default: 3.9-ubi8
       name: VERSION
       type: string
-    - name: ACR_USERNAME
-      description: The username for the ACR
-    - name: ACR_PASSWORD
-      description: The password for the ACR
   tasks:
     - name: fetch-repository
       params:
