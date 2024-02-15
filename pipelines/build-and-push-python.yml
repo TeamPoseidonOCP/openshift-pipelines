@@ -38,7 +38,7 @@ spec:
       workspaces:
         - name: output
           workspace: workspace
-        - name: basic-auth
+        - name: ssh-directory
           workspace: source-repo-credentials
     - name: build
       params:
