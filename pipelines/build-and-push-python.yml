@@ -38,8 +38,6 @@ spec:
       workspaces:
         - name: output
           workspace: workspace
-        - name: ssh-directory
-          workspace: source-repo-credentials
     - name: build
       params:
         - name: IMAGE
@@ -63,4 +61,4 @@ spec:
   workspaces:
     - name: workspace
     - name: docker-credentials
-    - name: source-repo-credentials
+    #- name: source-repo-credentials
