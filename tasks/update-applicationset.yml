@@ -1,0 +1,33 @@
+
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: update-applicationset
+spec:
+  params:
+    - name: file-path
+      type: string
+      description: Path to the ApplicationSet file in the repository
+    - name: new-targetRevision
+      type: string
+      description: The new targetRevision to set
+  workspaces:
+    - name: shared-data
+  steps:
+    - name: update-targetRevision
+      image: alpine
+      script: |
+        #!/bin/sh
+        set -e
+        sed -i "s/targetRevision: [^ ]*/targetRevision: $(params.new-targetRevision)/" $(workspaces.shared-data.path)/$(params.file-path)
+    - name: commit-and-push
+      image: alpine/git
+      script: |
+        #!/bin/sh
+        set -e
+        cd $(workspaces.shared-data.path)
+        git config user.name "USERNAME"
+        git config user.email "EMAIL"
+        git add $(params.file-path)
+        git commit -m "Update targetRevision to $(params.new-targetRevision)"
+        git push
