@@ -21,6 +21,10 @@ spec:
     - default: 3.9-ubi8 # Red Hat Universal Base Image 8
       name: VERSION
       type: string
+    - name: GIT_IMAGETAG_REPO
+      type: string
+    - name: GIT_IMAGETAG_VALUEFILE
+      type: string
   tasks:
     - name: fetch-repository
       params:
@@ -58,6 +62,58 @@ spec:
           workspace: workspace
         - name: dockerconfig
           workspace: docker-credentials
+    - name: update-image-tag
+      params:
+        - name: IMAGE
+          value: '$(params.IMAGE_NAME)' # Assuming IMAGE_NAME includes the tag
+        - name: GIT_REPO
+          value: '$(params.GIT_REPO)'
+        - name: GIT_IMAGETAG_REPO
+          value: '$(params.GIT_IMAGETAG_REPO)'
+        - name: GIT_IMAGETAG_VALUEFILE
+          value: '$(params.GIT_IMAGETAG_VALUEFILE)'
+      runAfter:
+        - build
+      taskSpec:
+        params:
+          - name: IMAGE
+            type: string
+          - name: GIT_REPO
+            type: string
+          - name: GIT_IMAGETAG_REPO
+            type: string
+          - name: GIT_IMAGETAG_VALUEFILE
+            type: string
+        steps:
+          - name: extract-tag-and-update
+            image: alpine/git # or any other image that has git and sed
+            script: |
+              #!/bin/sh
+              # Extract the image tag
+              IMAGE_TAG="$(echo $(params.IMAGE) | sed 's/.*://')"
+              echo "Extracted Image Tag: $IMAGE_TAG"
+              
+              # Setup Git credentials
+              GIT_USERNAME=$(cat $(workspaces.git-imagetag-credentials.path)/username)
+              GIT_PASSWORD=$(cat $(workspaces.git-imagetag-credentials.path)/password)
+              git config --global credential.helper store
+              
+              # Clone the external repository using the GIT_REPO parameter with credentials
+              REPO_URL=$(echo "$(params.GIT_REPO)" | sed -e "s|https://|https://${GIT_USERNAME}:${GIT_PASSWORD}@|g")
+              git clone "${REPO_URL}" external-repo
+              cd external-repo/$(params.GIT_IMAGETAG_VALUEFILE)
+              
+              # Use sed to find and replace the image tag dynamically
+              sed -i 's/\(image_source: .*:\).*/\1'"$IMAGE_TAG"'/' values.yaml
+              
+              # Commit and push the change using the existing credentials
+              git add values.yaml
+              git commit -m "Update image tag to $IMAGE_TAG"
+              git push
+      workspaces:
+        - name: git-imagetag-credentials
+          workspace: git-imagetag-credentials
   workspaces:
     - name: workspace
     - name: docker-credentials
+    - name: git-imagetag-credentials
