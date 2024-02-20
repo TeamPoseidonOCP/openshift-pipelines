@@ -99,8 +99,8 @@ spec:
               git config --global credential.helper store
 
               # Setup Git user for commit
-              git config --global user.email "user@example.com"
-              git config --global user.name "Git User"
+              git config --global user.email "${GIT_USERNAME}@test.com"
+              git config --global user.name "${GIT_USERNAME}"
               
               # Clone the external repository using the GIT_REPO parameter with credentials
               REPO_URL=$(echo "$(params.GIT_IMAGETAG_REPO)" | sed -e "s|https://|https://${GIT_USERNAME}:${GIT_PASSWORD}@|g")
