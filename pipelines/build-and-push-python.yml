@@ -99,7 +99,7 @@ spec:
               git config --global credential.helper store
               
               # Clone the external repository using the GIT_REPO parameter with credentials
-              REPO_URL=$(echo "$(params.GIT_REPO)" | sed -e "s|https://|https://${GIT_USERNAME}:${GIT_PASSWORD}@|g")
+              REPO_URL=$(echo "$(params.GIT_IMAGETAG_REPO)" | sed -e "s|https://|https://${GIT_USERNAME}:${GIT_PASSWORD}@|g")
               git clone "${REPO_URL}" external-repo
               cd external-repo/$(params.GIT_IMAGETAG_VALUEFILE)
               
