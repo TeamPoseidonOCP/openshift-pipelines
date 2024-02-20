@@ -97,6 +97,10 @@ spec:
               GIT_USERNAME=$(cat $(workspaces.git-imagetag-credentials.path)/username)
               GIT_PASSWORD=$(cat $(workspaces.git-imagetag-credentials.path)/password)
               git config --global credential.helper store
+
+              # Setup Git user for commit
+              git config --global user.email "user@example.com"
+              git config --global user.name "Git User"
               
               # Clone the external repository using the GIT_REPO parameter with credentials
               REPO_URL=$(echo "$(params.GIT_IMAGETAG_REPO)" | sed -e "s|https://|https://${GIT_USERNAME}:${GIT_PASSWORD}@|g")
