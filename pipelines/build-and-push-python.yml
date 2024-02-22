@@ -21,9 +21,9 @@ spec:
     - default: 3.9-ubi8 # Red Hat Universal Base Image 8
       name: VERSION
       type: string
-    - name: GIT_IMAGETAG_REPO
+    - name: GIT_DEPLOYMENT_REPO
       type: string
-    - name: GIT_IMAGETAG_VALUEFILE
+    - name: GIT_DEPLOYMENT_VALUEFILE
       type: string
   tasks:
     - name: fetch-repository
@@ -68,10 +68,10 @@ spec:
           value: '$(params.IMAGE_NAME)' # Assuming IMAGE_NAME includes the tag
         - name: GIT_REPO
           value: '$(params.GIT_REPO)'
-        - name: GIT_IMAGETAG_REPO
-          value: '$(params.GIT_IMAGETAG_REPO)'
-        - name: GIT_IMAGETAG_VALUEFILE
-          value: '$(params.GIT_IMAGETAG_VALUEFILE)'
+        - name: GIT_DEPLOYMENT_REPO
+          value: '$(params.GIT_DEPLOYMENT_REPO)'
+        - name: GIT_DEPLOYMENT_VALUEFILE
+          value: '$(params.GIT_DEPLOYMENT_VALUEFILE)'
       runAfter:
         - build
       taskSpec:
@@ -80,9 +80,9 @@ spec:
             type: string
           - name: GIT_REPO
             type: string
-          - name: GIT_IMAGETAG_REPO
+          - name: GIT_DEPLOYMENT_REPO
             type: string
-          - name: GIT_IMAGETAG_VALUEFILE
+          - name: GIT_DEPLOYMENT_VALUEFILE
             type: string
         steps:
           - name: extract-tag-and-update
@@ -103,9 +103,9 @@ spec:
               git config --global user.name "${GIT_USERNAME}"
               
               # Clone the external repository using the GIT_REPO parameter with credentials
-              REPO_URL=$(echo "$(params.GIT_IMAGETAG_REPO)" | sed -e "s|https://|https://${GIT_USERNAME}:${GIT_PASSWORD}@|g")
+              REPO_URL=$(echo "$(params.GIT_DEPLOYMENT_REPO)" | sed -e "s|https://|https://${GIT_USERNAME}:${GIT_PASSWORD}@|g")
               git clone "${REPO_URL}" external-repo
-              cd external-repo/$(params.GIT_IMAGETAG_VALUEFILE)
+              cd external-repo/$(params.GIT_DEPLOYMENT_VALUEFILE)
               
               # Use sed to find and replace the image tag dynamically
               sed -i 's/\(image_source: .*:\).*/\1'"$IMAGE_TAG"'/' values.yaml
